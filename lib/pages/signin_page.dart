@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:m6d3t1new/pages/home_page.dart';
 import 'package:m6d3t1new/pages/signup_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_animations/simple_animations.dart';
+
+import '../model/user_model.dart';
 
 
 class SignInPage extends StatefulWidget {
@@ -19,11 +24,36 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SigninPageState extends State<SignInPage> with AnimationMixin{
+
   bool _showPassword = false;
 
   late Animation<double> size;
+
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+
+
+
+  void getValues() async {
+    emailController.text = await getValue("emailController");
+    passwordController.text = await getValue("passwordController");
+  }
+
+  Future<void> save(String key, String value) async{
+    await secureStorage.write(key: key, value: value);
+  }
+  Future<String> getValue(String key) async {
+    return await secureStorage.read(key: key)?? "";
+  }
+
+  void saveDetails(){
+    save("emailController", emailController.text);
+    save("passwordController", passwordController.text);
+  }
+
+  late SharedPreferences sharedPreferences;
 
   _doLogin(){
     String email = emailController.text;
@@ -35,13 +65,24 @@ class _SigninPageState extends State<SignInPage> with AnimationMixin{
   }
 
   @override
+
   void initState() {
 
+    super.initState();
+    intelGetSavedData();
     size = Tween(begin: 0.0, end: 200.0).animate(controller);
-
+    getValues();
     // Start the animation playback
     controller.play();
-    super.initState();
+
+  }
+  void intelGetSavedData() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+  }
+  void storeData(){
+    User user = User(emailController.text, passwordController.text);
+    String userdata = jsonEncode(user);
+    sharedPreferences.setString('userdata', userdata);
   }
 
   @override
@@ -79,7 +120,7 @@ class _SigninPageState extends State<SignInPage> with AnimationMixin{
 
               const SizedBox(height: 40,),
                   //Email
-              TextField(
+              TextFormField(
                 controller: emailController,
                 cursorColor: Colors.blue,
                 style: const TextStyle(fontSize: 20,color: Colors.blue,fontWeight: FontWeight.bold),
@@ -92,10 +133,11 @@ class _SigninPageState extends State<SignInPage> with AnimationMixin{
                     borderRadius: BorderRadius.circular(50),
                   ),
                 ),
+
               ),
               const SizedBox(height: 20),
                   //Password
-              TextField(
+              TextFormField(
                 obscureText: !_showPassword,
                 controller: passwordController,
                 cursorColor: Colors.blue,
@@ -140,6 +182,8 @@ class _SigninPageState extends State<SignInPage> with AnimationMixin{
                 child:ElevatedButton(
                   onPressed: () {
                     _doLogin();
+                    storeData();
+                    saveDetails();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.indigo,
@@ -227,4 +271,6 @@ class _SigninPageState extends State<SignInPage> with AnimationMixin{
 
     );
   }
+
+
 }

@@ -23,14 +23,9 @@ class _HomePageState extends State<HomePage> {
         child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children:  [
-        const Text("Already have an account?", style: TextStyle(color: Colors.grey, fontSize: 16),),
-        const SizedBox(width: 10,),
-        GestureDetector(
-          onTap: (){
-            Navigator.pushReplacementNamed(context, SignInPage.id);
-          },
-          child: const Text('Log in',style: TextStyle(color: Colors.black, fontSize: 16),),
-        ),
+          IconButton(onPressed: (){
+          Navigator.pushReplacementNamed(context, SignInPage.id);
+        }, icon: const Icon(Icons.arrow_back, size: 50,))
       ])
     )
       );

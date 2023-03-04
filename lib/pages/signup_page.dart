@@ -1,5 +1,9 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:m6d3t1new/pages/signin_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'home_page.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -17,16 +21,43 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+
+
+  
+  Future<void> save(String key, String value) async{
+    await secureStorage.write(key: key, value: value);
+  }
+  // Future<String> getValue(String key) async {
+  //   return await secureStorage.read(key: key)?? "";
+  // }
+
+  void saveDetails(){
+    save("nameController", nameController.text);
+    save("emailController", emailController.text);
+    save("phoneController", phoneController.text);
+    save("passwordController", passwordController.text);
+  }
+  late SharedPreferences sharedPreferences;
 
   _doSignUp(){
     String name = nameController.text;
     String email = emailController.text;
+    String phone = phoneController.text;
     String password = passwordController.text;
+    String confirmPassword = confirmPasswordController.text;
 
-    if(email.isNotEmpty && password.isNotEmpty && name.isNotEmpty){
+    if(name.isNotEmpty && email.isNotEmpty && phone.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty ){
       Navigator.pushReplacementNamed(context, HomePage.id);
     }
   }
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -158,8 +189,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   height: 60,
                   width: 210,
                   child:ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+
                       _doSignUp();
+                      saveDetails();
+
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.indigo,
@@ -201,4 +235,5 @@ class _SignUpPageState extends State<SignUpPage> {
 
     );
   }
+
 }
