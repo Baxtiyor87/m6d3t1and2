@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:m6d3t1new/pages/home_page.dart';
 import 'package:m6d3t1new/pages/signup_page.dart';
+import 'package:m6d3t1new/service/prefs_service.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 
@@ -35,7 +36,9 @@ class _SigninPageState extends State<SignInPage> with AnimationMixin{
   }
 
   @override
+
   void initState() {
+    PrefService.storeName("Baxtiyor");
 
     size = Tween(begin: 0.0, end: 200.0).animate(controller);
 

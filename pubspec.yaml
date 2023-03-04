@@ -18,6 +18,8 @@ dependencies:
   simple_animations: ^5.0.0+3
   font_awesome_flutter: ^10.4.0
   community_material_icon: ^5.9.55
+  shared_preferences: ^2.0.18
+  logger: ^1.1.0
 
 dev_dependencies:
   flutter_test:
