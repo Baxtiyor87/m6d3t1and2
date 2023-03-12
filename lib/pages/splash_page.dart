@@ -14,7 +14,7 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
 
   _initTimer(){
-    Timer(const Duration(seconds: 0),(){
+    Timer(const Duration(seconds: 3),(){
       Navigator.pushReplacementNamed(context, SignInPage.id);
     });
   }
